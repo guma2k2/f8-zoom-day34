@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Weather App</title>
+        <link rel="stylesheet" href="./css/style.css" />
+    </head>
+    <body>
+        <div id="root">
+            <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+            <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+            <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+            <script type="text/babel">
+                function Weather() {
+                    const [weather, setWeather] = React.useState({
+                        hanoi: { city: "Hà Nội", temp: 28, weather: "Nắng ☀️", humidity: 65 },
+                        hcm: { city: "TP.HCM", temp: 32, weather: "Có mây 🌥️", humidity: 78 },
+                        danang: { city: "Đà Nẵng", temp: 30, weather: "Mưa nhẹ 🌦️", humidity: 82 },
+                    });
+                    const [city, setCity] = React.useState(Object.keys(weather)[0]);
+
+                    const handleChange = (e) => {
+                        const selected = e.target.value;
+                        console.log(selected);
+                        setCity(selected);
+                    };
+
+                    const handleReset = () => {
+                        setWeather((prev) => {
+                            const updated = Object.fromEntries(
+                                Object.entries(prev).map(([key, value]) => [
+                                    key,
+                                    {
+                                        ...value,
+                                        temp: Math.floor(Math.random() * 2) == 0 ? value.temp + 5 : value.temp - 5,
+                                        humidity: Math.floor(Math.random() * 2) == 0 ? value.humidity + 5 : value.humidity - 5,
+                                    },
+                                ])
+                            );
+                            return updated;
+                        });
+                    };
+                    return (
+                        <div class="weather-container">
+                            <a href="/" class="btn-back">
+                                ⬅ Back
+                            </a>
+                            <h1 class="heading">Weather App</h1>
+                            <select onChange={handleChange} class="weather-select">
+                                {Object.entries(weather).map(([key, item]) => {
+                                    return (
+                                        <option key={key} value={key}>
+                                            {" "}
+                                            {item.city}{" "}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+
+                            {city && (
+                                <div class="weather-info">
+                                    <h3 class="weather-city">{weather[city].city}</h3>
+                                    <div class="weather-temp">Nhiệt dộ: {weather[city].temp}°C</div>
+                                    <div class="weather-desc">Thời tiết: {weather[city].weather}</div>
+                                    <div class="weather-humidity">Độ ẩm: {weather[city].humidity}%</div>
+                                </div>
+                            )}
+                            <div class="btn success" onClick={handleReset}>
+                                Reset
+                            </div>
+                        </div>
+                    );
+                }
+
+                const app = <Weather />;
+                const root = ReactDOM.createRoot(document.querySelector("#root"));
+                root.render(app);
+            </script>
+        </div>
+    </body>
+</html>
